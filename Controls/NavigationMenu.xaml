@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="AIWorkspace.Controls.NavigationMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AIWorkspace.Controls">
+
+    <Border Background="{DynamicResource SidebarBrush}">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Logo -->
+
+            <StackPanel Margin="20">
+
+                <Ellipse Width="48"
+                         Height="48"
+                         Fill="{DynamicResource PrimaryBrush}"/>
+
+                <TextBlock Text="AI Workspace"
+                           Margin="0,15,0,25"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextBrush}"/>
+
+            </StackPanel>
+
+            <!-- Navigation -->
+
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding NavigationItems}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
+
+                <ListBox.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <controls:NavigationItem/>
+
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
+
+            </ListBox>
+
+        </Grid>
+
+    </Border>
+
+</UserControl>
