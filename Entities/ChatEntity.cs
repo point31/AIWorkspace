@@ -1,5 +1,7 @@
 ﻿namespace AIWorkspace.Entities;
 
+using AIWorkspace.AI;
+
 public class ChatEntity
 {
     public int Id { get; set; }
@@ -10,7 +12,7 @@ public class ChatEntity
 
     public DateTime UpdatedAt { get; set; }
 
-    public string Provider { get; set; } = "";
+    public ProviderType Provider { get; set; }
 
     public string Model { get; set; } = "";
 }

@@ -8,24 +8,74 @@
     <Grid>
 
         <ListBox
-            ItemsSource="{Binding Messages}"
-            BorderThickness="0"
-            Background="Transparent">
+    ItemsSource="{Binding Messages}"
+    BorderThickness="0"
+    Background="Transparent"
+    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+    ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+            <ListBox.ItemContainerStyle>
+
+                <Style TargetType="ListBoxItem">
+
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Focusable" Value="False"/>
+
+                </Style>
+
+            </ListBox.ItemContainerStyle>
 
             <ListBox.ItemTemplate>
 
                 <DataTemplate>
 
-                    <Border Margin="12"
-                            Padding="14"
-                            CornerRadius="12"
-                            MaxWidth="700">
+                    <Grid Margin="8">
 
-                        <TextBlock
-                            Text="{Binding Content}"
-                            TextWrapping="Wrap"/>
+                        <Border x:Name="Bubble"
+                Padding="12"
+                CornerRadius="16"
+                MaxWidth="700"
+                HorizontalAlignment="Left"
+                Background="#2B2B2B">
 
-                    </Border>
+                            <StackPanel>
+
+                                <TextBlock
+                    Text="{Binding Content}"
+                    TextWrapping="Wrap"
+                    FontSize="15"/>
+
+                                <TextBlock
+                    Margin="0,6,0,0"
+                    FontSize="11"
+                    Opacity="0.6"
+                    HorizontalAlignment="Right"
+                    Text="{Binding CreatedAt, StringFormat={}{0:HH:mm}}"/>
+
+                            </StackPanel>
+
+                        </Border>
+
+                    </Grid>
+
+                    <DataTemplate.Triggers>
+
+                        <DataTrigger Binding="{Binding Role}"
+                     Value="user">
+
+                            <Setter TargetName="Bubble"
+                    Property="Background"
+                    Value="#0E639C"/>
+
+                            <Setter TargetName="Bubble"
+                    Property="HorizontalAlignment"
+                    Value="Right"/>
+
+                        </DataTrigger>
+
+                    </DataTemplate.Triggers>
 
                 </DataTemplate>
 

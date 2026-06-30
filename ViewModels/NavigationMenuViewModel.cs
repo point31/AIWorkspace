@@ -53,14 +53,16 @@ public partial class NavigationMenuViewModel : ObservableObject
         }
     ];
 
-    public NavigationMenuViewModel()
+    public NavigationMenuViewModel(IMessenger messenger)
     {
+        _messenger = messenger;
         SelectedItem = Items[0];
     }
 
 
     [ObservableProperty]
     private NavigationItemModel? selectedItem;
+    private readonly IMessenger _messenger;
 
     partial void OnSelectedItemChanged(
     NavigationItemModel? oldValue,
@@ -73,7 +75,7 @@ public partial class NavigationMenuViewModel : ObservableObject
         {
             newValue.IsSelected = true;
 
-            WeakReferenceMessenger.Default.Send(
+            _messenger.Send(
                 new NavigationChangedMessage(newValue.Page));
         }
     }

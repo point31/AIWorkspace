@@ -4,9 +4,6 @@
              xmlns:controls="clr-namespace:AIWorkspace.Controls"
              xmlns:viewModels="clr-namespace:AIWorkspace.ViewModels">
 
-    <UserControl.DataContext>
-        <viewModels:NavigationMenuViewModel/>
-    </UserControl.DataContext>
 
     <Border Background="{DynamicResource SidebarBrush}">
 

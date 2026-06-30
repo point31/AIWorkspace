@@ -23,9 +23,12 @@ public partial class StatusBarViewModel :
     [ObservableProperty]
     private string chatCount = "0 Chats";
 
-    public StatusBarViewModel()
+    private readonly IMessenger _messenger;
+
+    public StatusBarViewModel(IMessenger messenger  )
     {
-        WeakReferenceMessenger.Default.Register(this);
+        _messenger = messenger;
+        _messenger.Register(this);
     }
 
     public void Receive(ChatCountChangedMessage message)

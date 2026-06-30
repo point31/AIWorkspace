@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AIWorkspace.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,8 @@ namespace AIWorkspace.Controls
         public NavigationMenu()
         {
             InitializeComponent();
+
+            DataContext = App.Host.Services.GetRequiredService<NavigationMenuViewModel>();
         }
     }
 }

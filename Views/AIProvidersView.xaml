@@ -1,14 +1,246 @@
 ﻿<UserControl x:Class="AIWorkspace.Views.AIProvidersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Foreground="{DynamicResource TextBrush}">
 
-    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,28,32,32" MaxWidth="680">
 
-        <TextBlock Text="AI Providers"
-                   FontSize="40"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+            <!-- Header row -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-    </Grid>
+                <TextBlock Text="AI Providers"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
 
+                <!-- Add Provider button — hidden when add panel is open or no providers left -->
+                <Button Grid.Column="1"
+                        Content="+ Add Provider"
+                        Command="{Binding OpenAddPanelCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAddPanelOpen}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding AvailableProviders.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <!-- ── Add-provider panel ── -->
+            <Border Visibility="{Binding IsAddPanelOpen, Converter={StaticResource BoolToVisibility}}"
+                    Background="{DynamicResource CardBrush}"
+                    CornerRadius="12"
+                    Padding="20"
+                    Margin="0,0,0,16"
+                    BorderBrush="{DynamicResource PrimaryBrush}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="Add a provider"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,14"/>
+
+                    <TextBlock Text="Provider"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding AvailableProviders}"
+                              SelectedItem="{Binding SelectedProviderToAdd}"
+                              Margin="0,0,0,14"
+                              Height="36">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource ProviderTypeName}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Text="API Key"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,0,0,5"/>
+                    <PasswordBox x:Name="NewKeyBox"
+                                 PasswordChar="•"
+                                 Height="36"
+                                 Margin="0,0,0,18"
+                                 PasswordChanged="NewKeyBox_PasswordChanged"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Cancel"
+                                Command="{Binding CancelAddCommand}"
+                                Width="90" Height="36"
+                                Margin="0,0,10,0"
+                                Background="{DynamicResource CardBrush}"
+                                Foreground="{DynamicResource SecondaryTextBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1"
+                                Cursor="Hand"/>
+                        <Button Content="Add"
+                                Command="{Binding ConfirmAddCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Width="90"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Active provider cards ── -->
+            <ItemsControl x:Name="ProvidersItemsControl"
+                          ItemsSource="{Binding ActiveProviders}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,12"
+                                Padding="20"
+                                CornerRadius="12"
+                                Background="{DynamicResource CardBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Header: icon + name + enabled + remove -->
+                                <Grid Grid.Row="0" Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding ProviderIcon}"
+                                               FontSize="22"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,10,0"/>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding ProviderName}"
+                                                   FontSize="17"
+                                                   FontWeight="SemiBold"/>
+                                        <CheckBox Content="Enabled"
+                                                  IsChecked="{Binding IsEnabled}"
+                                                  Margin="0,4,0,0"
+                                                  Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="2"
+                                            Content="✕ Remove"
+                                            Command="{Binding DataContext.RemoveCommand,
+                                                ElementName=ProvidersItemsControl}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent"
+                                            Foreground="#E57373"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            FontSize="12"
+                                            Padding="8,4"
+                                            VerticalAlignment="Top"/>
+                                </Grid>
+
+                                <!-- API Key row -->
+                                <Grid Grid.Row="1" Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Masked display -->
+                                    <Border Background="#161B20"
+                                            CornerRadius="6"
+                                            Padding="10,8"
+                                            Visibility="{Binding IsEditingKey,
+                                                Converter={StaticResource InverseBoolToVisibility}}">
+                                        <TextBlock Text="{Binding MaskedKey}"
+                                                   FontFamily="Consolas"
+                                                   FontSize="13"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                    </Border>
+
+                                    <!-- Edit field (PasswordBox — wired in code-behind) -->
+                                    <PasswordBox Grid.Column="0"
+                                                 PasswordChar="•"
+                                                 Height="36"
+                                                 Tag="{Binding}"
+                                                 Visibility="{Binding IsEditingKey,
+                                                     Converter={StaticResource BoolToVisibility}}"
+                                                 PasswordChanged="EditKeyBox_PasswordChanged"/>
+
+                                    <Button Grid.Column="1"
+                                            Margin="8,0,0,0"
+                                            Height="36"
+                                            Padding="12,0"
+                                            Cursor="Hand"
+                                            Command="{Binding DataContext.ToggleEditKeyCommand,
+                                                ElementName=ProvidersItemsControl}"
+                                            CommandParameter="{Binding}"
+                                            Background="{DynamicResource BorderBrush}"
+                                            Foreground="{DynamicResource TextBrush}"
+                                            BorderThickness="0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Content" Value="Edit Key"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsEditingKey}" Value="True">
+                                                        <Setter Property="Content" Value="Done"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Grid>
+
+                                <!-- Default Model -->
+                                <StackPanel Grid.Row="2" Margin="0,0,0,14">
+                                    <TextBlock Text="Default Model"
+                                               Foreground="{DynamicResource SecondaryTextBrush}"
+                                               FontSize="12"
+                                               Margin="0,0,0,5"/>
+                                    <TextBox Text="{Binding DefaultModel, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="36"/>
+                                </StackPanel>
+
+                                <!-- Save -->
+                                <Button Grid.Row="3"
+                                        Content="Save"
+                                        HorizontalAlignment="Right"
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Width="100"
+                                        Command="{Binding DataContext.SaveCommand,
+                                            ElementName=ProvidersItemsControl}"
+                                        CommandParameter="{Binding}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Empty state -->
+            <TextBlock Foreground="{DynamicResource SecondaryTextBrush}"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       Margin="0,48,0,0"
+                       Text="No providers configured yet. Click '+ Add Provider' to get started.">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ActiveProviders.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

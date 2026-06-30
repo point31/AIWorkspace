@@ -6,11 +6,16 @@ namespace AIWorkspace.Repositories;
 
 public class MessageRepository
 {
+    private readonly AppDbContext _db;
+
+    public MessageRepository(AppDbContext db)
+    {
+        _db = db;
+    }
     public async Task<List<MessageEntity>> GetByChatAsync(int chatId)
     {
-        using var db = new AppDbContext();
 
-        return await db.Messages
+        return await _db.Messages
             .Where(x => x.ChatEntityId == chatId)
             .OrderBy(x => x.CreatedAt)
             .ToListAsync();
@@ -21,7 +26,6 @@ public class MessageRepository
         string role,
         string content)
     {
-        using var db = new AppDbContext();
 
         var message = new MessageEntity
         {
@@ -31,16 +35,16 @@ public class MessageRepository
             CreatedAt = DateTime.Now
         };
 
-        db.Messages.Add(message);
+        _db.Messages.Add(message);
 
-        var chat = await db.Chats.FindAsync(chatId);
+        var chat = await _db.Chats.FindAsync(chatId);
 
         if (chat != null)
         {
             chat.UpdatedAt = DateTime.Now;
         }
 
-        await db.SaveChangesAsync();
+        await _db.SaveChangesAsync();
 
         return message;
     }

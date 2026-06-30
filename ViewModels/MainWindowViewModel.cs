@@ -12,12 +12,15 @@ public partial class MainWindowViewModel :
 {
     [ObservableProperty]
     private object? currentView;
+    private readonly IMessenger _messenger;
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(IMessenger messenger)
     {
-        WeakReferenceMessenger.Default.Register(this);
+        _messenger = messenger;
+        _messenger.Register(this);
 
         CurrentView = new HomeView();
+       
     }
 
     public void Receive(NavigationChangedMessage message)

@@ -3,9 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModels="clr-namespace:AIWorkspace.ViewModels">
 
-    <UserControl.DataContext>
-        <viewModels:StatusBarViewModel/>
-    </UserControl.DataContext>
 
     <Border Height="32"
             Background="{DynamicResource SidebarBrush}"

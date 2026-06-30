@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using AIWorkspace.AI;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace AIWorkspace.Models;
 
@@ -17,17 +18,23 @@ public partial class ChatModel : ObservableObject
     private bool isSelected;
 
     [ObservableProperty]
-    private string provider = "";
+    private ProviderType provider;
+
+    public string ProviderDisplay =>
+        Provider switch
+        {
+            ProviderType.OpenAI => "🤖 OpenAI",
+            ProviderType.Claude => "🟣 Claude",
+            ProviderType.Gemini => "✨ Gemini",
+            _ => "Unknown"
+        };
 
     public string ProviderIcon =>
         Provider switch
         {
-            "OpenAI" => "🤖",
-            "Anthropic" => "🧠",
-            "Google" => "✨",
-            "OpenRouter" => "🟣",
-            "Ollama" => "🦙",
-            "LM Studio" => "💻",
-            _ => "💬"
+            ProviderType.OpenAI => "🤖",
+            ProviderType.Claude => "🟣",
+            ProviderType.Gemini => "✨",
+            _ => "❓"
         };
 }

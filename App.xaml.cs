@@ -1,4 +1,5 @@
-﻿using AIWorkspace.Infrastructure;
+﻿using AIWorkspace.AI;
+using AIWorkspace.Infrastructure;
 using AIWorkspace.Services;
 using AIWorkspace.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,23 +16,26 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        DatabaseService.Initialize();
-
         Host = Infrastructure.HostBuilder.Build();
 
         await Host.StartAsync();
 
-        var window = Host.Services.GetRequiredService<MainWindow>();
+        // Apply EF Core migrations before anything touches the database.
+        var dbService = Host.Services.GetRequiredService<DatabaseService>();
+        dbService.Initialize();
 
+        // Load saved API keys into provider instances.
+        var providerManager = Host.Services.GetRequiredService<ProviderManager>();
+        await providerManager.ApplySettingsAsync();
+
+        var window = Host.Services.GetRequiredService<MainWindow>();
         window.Show();
     }
 
     protected override async void OnExit(ExitEventArgs e)
     {
         await Host.StopAsync();
-
         Host.Dispose();
-
         base.OnExit(e);
     }
 }

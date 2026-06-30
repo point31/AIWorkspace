@@ -13,17 +13,25 @@ public partial class MessageListViewModel :
     IRecipient<MessageAddedMessage>
 {
     private readonly MessageRepository _repository;
+    private readonly IMessenger _messenger;
 
     public ObservableCollection<MessageModel> Messages { get; } = [];
 
     [ObservableProperty]
     private ChatModel? currentChat;
 
-    public MessageListViewModel(MessageRepository repository)
+    public MessageListViewModel(MessageRepository repository, IMessenger messenger)
     {
         _repository = repository;
-        WeakReferenceMessenger.Default.Register<ChatSelectedMessage>(this);
-        WeakReferenceMessenger.Default.Register<MessageAddedMessage>(this);
+        _messenger = messenger;
+
+        _messenger.Register<MessageListViewModel, ChatSelectedMessage>(
+    this,
+    static (recipient, message) => recipient.Receive(message));
+
+        _messenger.Register<MessageListViewModel, MessageAddedMessage>(
+            this,
+            static (recipient, message) => recipient.Receive(message));
     }
     public void Receive(MessageAddedMessage message)
     {

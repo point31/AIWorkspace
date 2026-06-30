@@ -1,6 +1,6 @@
-﻿using AIWorkspace.Infrastructure;
-using AIWorkspace.ViewModels;
+﻿using AIWorkspace.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Windows;
 
 namespace AIWorkspace.Views;
@@ -9,8 +9,16 @@ public partial class MainWindow : Window
 {
     public MainWindow()
     {
-        InitializeComponent();
+        try
+        {
+            InitializeComponent();
 
-        DataContext = App.Host.Services.GetRequiredService<MainWindowViewModel>();
+            DataContext = App.Host.Services.GetRequiredService<MainWindowViewModel>();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.ToString(), "Startup Error");
+            throw;
+        }
     }
 }

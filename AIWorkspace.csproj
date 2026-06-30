@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="OpenAI" Version="2.11.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,6 @@
     <Folder Include="Helpers\" />
     <Folder Include="Security\" />
     <Folder Include="Resources\" />
-    <Folder Include="Providers\" />
   </ItemGroup>
 
 </Project>

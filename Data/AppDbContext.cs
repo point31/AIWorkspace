@@ -1,23 +1,20 @@
 ﻿using AIWorkspace.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace AIWorkspace.Data;
 
 public class AppDbContext : DbContext
 {
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
+    {
+    }
+
     public DbSet<ChatEntity> Chats => Set<ChatEntity>();
 
     public DbSet<MessageEntity> Messages => Set<MessageEntity>();
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var dbPath = Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory,
-        "AIWorkspace.db");
-
-        optionsBuilder.UseSqlite($"Data Source={dbPath}");
-    }
+    public DbSet<ProviderSettingsEntity> ProviderSettings => Set<ProviderSettingsEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
