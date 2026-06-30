@@ -9,7 +9,8 @@ namespace AIWorkspace.ViewModels;
 
 public partial class MessageListViewModel :
     ObservableObject,
-    IRecipient<ChatSelectedMessage>
+    IRecipient<ChatSelectedMessage>,
+    IRecipient<MessageAddedMessage>
 {
     private readonly MessageRepository _repository;
 
@@ -21,9 +22,13 @@ public partial class MessageListViewModel :
     public MessageListViewModel(MessageRepository repository)
     {
         _repository = repository;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.Register<ChatSelectedMessage>(this);
+        WeakReferenceMessenger.Default.Register<MessageAddedMessage>(this);
     }
-
+    public void Receive(MessageAddedMessage message)
+    {
+        Messages.Add(message.Value);
+    }
     public async void Receive(ChatSelectedMessage message)
     {
         CurrentChat = message.Value;
@@ -43,4 +48,5 @@ public partial class MessageListViewModel :
             });
         }
     }
+    
 }

@@ -4,9 +4,7 @@
              xmlns:controls="clr-namespace:AIWorkspace.Controls"
              xmlns:viewModels="clr-namespace:AIWorkspace.ViewModels">
 
-    <UserControl.DataContext>
-        <viewModels:ChatsViewModel/>
-    </UserControl.DataContext>
+ 
 
     <Grid>
 

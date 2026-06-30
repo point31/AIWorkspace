@@ -2,22 +2,36 @@
 using AIWorkspace.Services;
 using AIWorkspace.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Windows;
 
 namespace AIWorkspace;
 
 public partial class App : Application
 {
-    protected override void OnStartup(StartupEventArgs e)
+    public static IHost Host { get; private set; } = null!;
+
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
         DatabaseService.Initialize();
 
-        ServiceLocator.Configure();
+        Host = Infrastructure.HostBuilder.Build();
 
-        var mainWindow = ServiceLocator.Services.GetRequiredService<MainWindow>();
+        await Host.StartAsync();
 
-        mainWindow.Show();
+        var window = Host.Services.GetRequiredService<MainWindow>();
+
+        window.Show();
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        await Host.StopAsync();
+
+        Host.Dispose();
+
+        base.OnExit(e);
     }
 }
