@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="AIWorkspace.Controls.PrimaryButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+
+    <Button Content="{Binding Text, ElementName=Root}"
+            Height="42"
+            Padding="20,0"
+            Cursor="Hand"
+            Background="{DynamicResource PrimaryBrush}"
+            Foreground="White"
+            BorderThickness="0"
+            FontWeight="SemiBold">
+
+        <Button.Resources>
+
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius"
+                        Value="10"/>
+            </Style>
+
+        </Button.Resources>
+
+    </Button>
+
+</UserControl>

@@ -30,10 +30,7 @@
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Converters\" />
-    <Folder Include="Database\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Views\" />
-    <Folder Include="Services\" />
     <Folder Include="Security\" />
     <Folder Include="Resources\" />
     <Folder Include="Providers\" />

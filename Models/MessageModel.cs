@@ -2,17 +2,17 @@
 
 namespace AIWorkspace.Models;
 
-public partial class NavigationItemModel : ObservableObject
+public partial class MessageModel : ObservableObject
 {
     [ObservableProperty]
-    private NavigationPage page;
+    private int id;
 
     [ObservableProperty]
-    private string title = "";
+    private string role = "";
 
     [ObservableProperty]
-    private string icon = "";
+    private string content = "";
 
     [ObservableProperty]
-    private bool isSelected;
+    private DateTime createdAt;
 }

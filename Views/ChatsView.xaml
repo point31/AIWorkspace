@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="AIWorkspace.Views.ChatsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AIWorkspace.Controls"
+             xmlns:viewModels="clr-namespace:AIWorkspace.ViewModels">
+
+    <UserControl.DataContext>
+        <viewModels:ChatsViewModel/>
+    </UserControl.DataContext>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <controls:ChatSidebar
+            DataContext="{Binding Sidebar}" />
+
+        <!-- Main Area -->
+        <Grid Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <controls:ChatHeader
+                Grid.Row="0"
+                DataContext="{Binding Header}" />
+
+            <controls:MessageList
+                Grid.Row="1"
+                DataContext="{Binding MessageList}" />
+
+            <controls:MessageInput
+                Grid.Row="2"
+                DataContext="{Binding MessageInput}" />
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

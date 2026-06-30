@@ -1,47 +1,54 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using AIWorkspace.Messages;
 using AIWorkspace.Models;
-using System.Collections.ObjectModel;
+using AIWorkspace.Views;
 
 namespace AIWorkspace.ViewModels;
 
-public partial class MainWindowViewModel : ObservableObject
+public partial class MainWindowViewModel :
+    ObservableObject,
+    IRecipient<NavigationChangedMessage>
 {
-    public ObservableCollection<NavigationItemModel> NavigationItems { get; } =
-[
-    new()
-    {
-        Title="Home",
-        Icon="\uE80F"
-    },
+    [ObservableProperty]
+    private object? currentView;
 
-    new()
+    public MainWindowViewModel()
     {
-        Title="Chats",
-        Icon="\uE8BD"
-    },
+        WeakReferenceMessenger.Default.Register(this);
 
-    new()
-    {
-        Title="Prompt Library",
-        Icon="\uE7C3"
-    },
-
-    new()
-    {
-        Title="AI Providers",
-        Icon="\uE9CA"
-    },
-
-    new()
-    {
-        Title="Files",
-        Icon="\uE8B7"
-    },
-
-    new()
-    {
-        Title="Settings",
-        Icon="\uE713"
+        CurrentView = new HomeView();
     }
-    ];
+
+    public void Receive(NavigationChangedMessage message)
+    {
+        switch (message.Value)
+        {
+            case NavigationPage.Home:
+                CurrentView = new HomeView();
+                break;
+
+            case NavigationPage.Chats:
+                CurrentView = new ChatsView();
+                break;
+
+            case NavigationPage.PromptLibrary:
+                CurrentView = new PromptLibraryView();
+                break;
+
+            case NavigationPage.AIProviders:
+                CurrentView = new AIProvidersView();
+                break;
+
+            case NavigationPage.Files:
+                CurrentView = new FilesView();
+                break;
+
+            case NavigationPage.Settings:
+                CurrentView = new SettingsView();
+                break;
+        }
+    }
+
+
 }
